@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jrnl"
+version = "0.1.0"
+description = "Terminal-first AI journaling CLI"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "click>=8.1",
+  "rich>=13.7",
+  "httpx>=0.27",
+  "tomli>=2.0.1; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+jrnl = "jrnl.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jrnl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.22.0",
+]
