@@ -24,6 +24,21 @@ def test_resolve_editor_command_uses_nano_on_linux_when_vim_missing(monkeypatch)
     assert result == ["nano"]
 
 
+def test_resolve_editor_command_maps_vim_to_nvim(monkeypatch) -> None:
+    def fake_which(name: str) -> str | None:
+        if name == "vim":
+            return None
+        if name == "nvim":
+            return "/usr/bin/nvim"
+        return None
+
+    monkeypatch.setattr("jrnl.editor.shutil.which", fake_which)
+
+    result = resolve_editor_command(configured_command="vim -u NONE", platform="nt")
+
+    assert result == ["nvim", "-u", "NONE"]
+
+
 def test_resolve_editor_command_uses_notepad_on_windows_when_vim_missing(monkeypatch) -> None:
     def fake_which(name: str) -> str | None:
         return None if name == "vim" else None

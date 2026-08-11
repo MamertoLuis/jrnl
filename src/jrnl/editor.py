@@ -27,7 +27,11 @@ def resolve_editor_command(
         parts = _split_command(candidate, windows=windows)
         if not parts:
             continue
-        if parts[0].lower() == "notepad" or shutil.which(parts[0]) is not None:
+        executable = parts[0]
+        if shutil.which(executable) is None and executable.lower() == "vim" and shutil.which("nvim") is not None:
+            executable = "nvim"
+            parts = [executable, *parts[1:]]
+        if executable.lower() == "notepad" or shutil.which(executable) is not None:
             return parts
     return ["notepad"] if windows else ["nano"]
 
